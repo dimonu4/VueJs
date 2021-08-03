@@ -3,11 +3,14 @@
     <img alt="Vue logo" src="./assets/logo.png" />
     <!-- <HelloWorld msg="Welcome to Your Vue.js App" /> -->
     <Calculator />
+    <TestComponent/>
   </div>
+  
 </template>
 
 <script>
 // import HelloWorld from "./components/HelloWorld.vue";
+import TestComponent from './components/TestComponent.vue'
 import Calculator from "./components/Calculator.vue";
 
 export default {
@@ -15,6 +18,7 @@ export default {
   components: {
     // HelloWorld,
     Calculator,
+    TestComponent
   },
 };
 </script>
