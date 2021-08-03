@@ -1,17 +1,17 @@
 <template>
   <div>
     <div class="display">
-      <input v-model.number="operand1" />
-      <input v-model.number="operand2" /> ={{ result }} fib = {{ fibResult }}
+      <input v-model.number="operand1" name="operand1" />
+      <input v-model.number="operand2" name="operand2"/> ={{ result }} fib = {{ fibResult }}
     </div>
     <div class="fibDisplay"></div>
-    <div v-show="error">Ошибка: {{ error }}</div>
+    <div class="error" v-show="error">Ошибка: {{ error }}</div>
     <div class="keyboard">
       <button
         v-for="operand in operands"
         v-bind:key="operand"
-        v-bind:title="operand"
-        v-bind:disabled="operand1 === '' || operand2 === ''"
+        v-bind:disabled='operand1===""||operand2===""'
+        v-bind:name="operand"
         v-on:click="calculate(operand)"
       >
         {{ operand }}
@@ -28,10 +28,13 @@
       экранную клавиатуру
     </div>
     <div class="displayKeyboard" v-show="checked">
-      <button v-for="key in keys" v-bind:key="key" @click="change(key)">
+      <button v-for="key in keys"
+       v-bind:key="key"
+       v-bind:name='key'
+        @click="change(key)">
         {{ key }}
       </button>
-      <button @click="erase">&#8592;</button>
+      <button class='erase' @click="erase">&#8592;</button>
       <div>
         <input
           type="radio"
@@ -69,6 +72,32 @@ export default {
     };
   },
   methods: {
+       calculate(operation = "+") {
+      this.error = "";
+      switch (operation) {
+        case "+":
+          this.add();
+          break;
+        case "-":
+          this.subtract();
+          break;
+        case "*":
+          this.multiply();
+          break;
+        case "/":
+          this.divide();
+          break;
+        case "a^b":
+          this.pow();
+          break;
+        case "floor":
+          this.div();
+          break;
+      }
+      const key = Date.now();
+      const value = `${this.operand1}${operation}${this.operand2}=${this.result}`;
+      this.$set(this.logs, key, value);
+    },
     change(number) {
       let { operand1, operand2 } = this;
       if (this.picked === "operand1") {
@@ -95,32 +124,7 @@ export default {
       return n <= 1 ? n : this.fib(n - 1) + this.fib(n - 2);
     },
 
-    calculate(operation = "+") {
-      this.error = "";
-      switch (operation) {
-        case "+":
-          this.add();
-          break;
-        case "-":
-          this.subtract();
-          break;
-        case "*":
-          this.multiply();
-          break;
-        case "/":
-          this.divide();
-          break;
-        case "a^b":
-          this.pow();
-          break;
-        case "floor":
-          this.div();
-          break;
-      }
-      const key = Date.now();
-      const value = `${this.operand1}${operation}${this.operand2}=${this.result}`;
-      this.$set(this.logs, key, value);
-    },
+ 
     add() {
       this.result = this.operand1 + this.operand2;
       this.fibResult = this.fib1 + this.fib2;
